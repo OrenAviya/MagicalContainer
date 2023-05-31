@@ -2,9 +2,6 @@
 #include "stdlib.h"
 #include "vector"
 #include <iostream>
-#include "PrimeIterator.hpp"
-#include "AscendingIterator.hpp"
-#include "SideCrossIterator.hpp"
 
 using namespace std;
 namespace ariel
@@ -16,10 +13,15 @@ class MagicalContainer {
 
 public:
     vector<int> elements; 
-    // int size;
     
-    //constructors:
-    MagicalContainer(): elements() {}
+     // Default constructor
+    MagicalContainer()  {}
+
+    // Copy constructor
+    MagicalContainer(const MagicalContainer& other) : elements(other.elements) {}
+
+    // Move constructor
+    MagicalContainer(MagicalContainer&& other) noexcept : elements(std::move(other.elements)) {}
 
     // destructor - don't need to manually delete the elements 
     //vector because it will be automatically destroyed when the MagicalContainer object goes out of scope
@@ -31,29 +33,39 @@ public:
 
     void removeElement(int element);
 
-    int size() const;
+    size_t size() const;
+// assignment operator
+    MagicalContainer& operator=(const MagicalContainer& other) ;
 
-    void operator=(const MagicalContainer& other);
-
-    // void SideCrossIterator(MagicalContainer& container);
-    // void PrimeIterator(MagicalContainer& container);
-    // void AscendingIterator(MagicalContainer& container);
+// Move assignment operator
+    MagicalContainer& operator=(MagicalContainer&& other) noexcept;
 
 
 class AscendingIterator {
     private:
-        const MagicalContainer& container;
-        int currentPosition;
+         MagicalContainer& container;
+        size_t currentPosition;
 
     public:
         // constructor
-        AscendingIterator(const MagicalContainer& container) : container(container), currentPosition(0) {}
+        AscendingIterator( MagicalContainer& container) : container(container), currentPosition(0) {}
+        
+        AscendingIterator(MagicalContainer& container, size_t idx): container(container), currentPosition(idx) {}
+
         //copy constructor
-        AscendingIterator( const AscendingIterator& AI): container(AI.container), currentPosition(AI.currentPosition){}
+        AscendingIterator( const  AscendingIterator& otherAI): container(otherAI.container), currentPosition(otherAI.currentPosition){}
+
+        //move constructor
+        AscendingIterator (AscendingIterator& otherAI) noexcept: container(otherAI.container), currentPosition(otherAI.currentPosition){
+            otherAI.currentPosition = 0;
+        }
 
         bool operator==(const AscendingIterator& other) const;
         bool operator!=(const AscendingIterator& other) const;
-
+        //Assignment operator
+        AscendingIterator& operator= (const AscendingIterator& other );
+        // Move Assignment operator
+         AscendingIterator& operator=(AscendingIterator&& otherAI) noexcept;
         AscendingIterator& operator++() ;
 
         int operator*() const ;
@@ -61,26 +73,35 @@ class AscendingIterator {
     AscendingIterator begin() const ;
 
     AscendingIterator end() const ;
+    
     };
 
-class SideCrossIterator {
-private:
-    const MagicalContainer& container;
-    int forwardPosition;
-    int backwardPosition;
-    bool forward;
-
+//    // SideCrossIterator class
+ class SideCrossIterator {
 public:
-    SideCrossIterator(const MagicalContainer& container) : container(container), forwardPosition(0), backwardPosition(container.size() - 1) , forward(true) {}
-    SideCrossIterator(MagicalContainer container, int idx)  : container(container), forwardPosition(idx) , backwardPosition(container.size() - 1) , forward(true){}
+    MagicalContainer& container;
+    size_t forwardPosition;
+    size_t backwardPosition;
+    int* PforwardPosition = &(container.elements[0]) ;
+    int* PbackwardPosition = &(container.elements[container.size()-1]);
+    bool forward;
+        // Constructors
+    SideCrossIterator( MagicalContainer& Ocontainer) : container(Ocontainer), forwardPosition(0), backwardPosition(Ocontainer.size() - 1) , forward(true) {
+        cout<<"Ocontainer.size() - 1: = "<<Ocontainer.size() - 1;
+    }
+    SideCrossIterator(MagicalContainer& container, size_t idx)  : container(container), forwardPosition(idx) , backwardPosition(container.size() - 1) , forward(true){
+        if (idx > container.size()){
+            throw std::out_of_range("Invalid index");
+        }
+    }
     // Copy constructor
-    SideCrossIterator(const SideCrossIterator& other) : container(other.container), forwardPosition(other.forwardPosition), backwardPosition(other.backwardPosition) , forward(true){}
+    SideCrossIterator(const SideCrossIterator& other) : container(other.container), forwardPosition(other.forwardPosition), backwardPosition(other.container.size() - 1) , forward(true){}
 
     // Destructor (no additional cleanup needed)
     ~SideCrossIterator() {}
 
     // Assignment operator
-    SideCrossIterator& operator=(const SideCrossIterator& other) = default;
+    SideCrossIterator& operator=(const SideCrossIterator& other);
     // Equality comparison (operator==)
     bool operator==(const SideCrossIterator& other) const;
     // Inequality comparison (operator!=)
@@ -102,8 +123,8 @@ public:
 
 class PrimeIterator {
 public:
-    const MagicalContainer& container;
-    int currentPosition;
+     MagicalContainer& container;
+    size_t currentPosition;
 
     bool isPrime(int number) const {
         if (number <= 1) {
@@ -117,23 +138,17 @@ public:
         return true;
     }
 
-    PrimeIterator(const MagicalContainer& container) : container(container), currentPosition(0) {}
-    PrimeIterator(MagicalContainer container, int idx)  : container(container), currentPosition(idx){}
+    PrimeIterator( MagicalContainer& container) : container(container), currentPosition(0) {}
+    PrimeIterator(MagicalContainer& container, size_t idx)  : container(container), currentPosition(idx){}
     // Copy constructor
-    PrimeIterator(const PrimeIterator& PI) : container(PI.container), currentPosition(PI.currentPosition) {}
+    PrimeIterator(const PrimeIterator& otherPI) : container(otherPI.container), currentPosition(otherPI.currentPosition) {}
 
     // Destructor (no additional cleanup needed)
     ~PrimeIterator() {}
 
     // Assignment operator
-     MagicalContainer::PrimeIterator& operator=(const PrimeIterator&) = default;
+   MagicalContainer:: PrimeIterator& operator=(const PrimeIterator& other) ;
 
-    //     if (this != &other) {
-    //         container = other.container;
-    //         currentPosition = other.currentPosition;
-    //     }
-    //     return *this;
-    // }
 
     // Equality comparison (operator==)
     bool operator==(const PrimeIterator& other) const; 

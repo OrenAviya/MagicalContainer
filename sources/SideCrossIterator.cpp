@@ -1,44 +1,62 @@
-#include "SideCrossIterator.hpp"
+ #include "MagicalContainer.hpp"
 
 
 
     // Equality comparison (operator==)
-    bool SideCrossIterator::operator==(const SideCrossIterator& other) const {
-        return forwardPosition == other.forwardPosition && backwardPosition == other.backwardPosition;
+    bool  MagicalContainer::SideCrossIterator::operator==(const SideCrossIterator& other) const {
+        return forwardPosition == other.forwardPosition && backwardPosition == other.backwardPosition && forward == other.forward;
     }
 
     // Inequality comparison (operator!=)
-    bool SideCrossIterator::operator!=(const SideCrossIterator& other) const {
+    bool  MagicalContainer::SideCrossIterator::operator!=(const SideCrossIterator& other) const {
         return !(*this == other);
     }
 
     // GT, LT comparison (operator>, operator<)
-    bool SideCrossIterator:: operator>(const SideCrossIterator& other) const {
+    bool  MagicalContainer::SideCrossIterator:: operator>(const SideCrossIterator& other) const {
         return forwardPosition > other.forwardPosition && backwardPosition > other.backwardPosition;
     }
 
-    bool SideCrossIterator::operator<(const SideCrossIterator& other) const {
+    bool  MagicalContainer::SideCrossIterator::operator<(const SideCrossIterator& other) const {
         return forwardPosition < other.forwardPosition && backwardPosition < other.backwardPosition;
     }
 
     // Dereference operator (operator*)
     int MagicalContainer::SideCrossIterator::operator*() const {
-    if (forward)
-        return forwardPosition;
-    else
-        return backwardPosition;
+      if (forward)
+            return container.elements[ forwardPosition];
+        else
+            return container.elements[backwardPosition ];
+}
+MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator& other){
+     if (this != &other) {
+            this->container = other.container;
+             forwardPosition= other.forwardPosition;
+             backwardPosition = other.backwardPosition;
+             forward = other.forward;
+        }
+        return *this;
+    
 }
 
     MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() {
-    if (forward) {
+        if (forwardPosition < backwardPosition) {
+        if (forward) {
+            ++forwardPosition;
+           
+        } else {
+            --backwardPosition;
+             
+        }
+        forward = !forward;
+    } 
+    else if (forwardPosition == backwardPosition) {
         ++forwardPosition;
-        forward = false;
-    } else {
-        --backwardPosition;
-        forward = true;
+        forward =false;
     }
-    return *this;
-}
+        
+        return *this;
+    }
 
 
     MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() const{
@@ -46,7 +64,21 @@
 }
 
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() const{
-    return SideCrossIterator(this->container, container.size());
+ SideCrossIterator it = SideCrossIterator(*this);
+ 
+   if (container.size() %2 == 0){
+    it.forwardPosition = container.size()/2;
+    it.backwardPosition = container.size()/2-1;
+    it.forward = false;}
+   else{
+    it.forwardPosition = container.size()/2+1;
+    it.backwardPosition = container.size()/2;
+    it.forward = false;
+    // cout<< "it.forwardPosition ,it.backwardPosition : "<<it.forwardPosition<< "," <<it.backwardPosition<<"\n";
+   }
+    
+    return it; 
+    
 }
 
 
