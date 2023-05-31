@@ -78,8 +78,8 @@ TEST_CASE("check begin & end SideCrossIterator"){
     CHECK (sideIter.forwardPosition == 0);
     magic.removeElement(12);
     CHECK(magic.size()==5);
-    CHECK(sideIter.container.size() == magic.size());
-    CHECK(sideIter.container.size() ==5);
+    CHECK(sideIter.container->size() == magic.size());
+    CHECK(sideIter.container->size() ==5);
     CHECK(*sideIter.PbackwardPosition == magic.elements[4]);
     
 }
@@ -204,8 +204,8 @@ TEST_CASE("check begin & end AscendingIterator"){
     CHECK (acsIter.currentPosition == 0);
     magic.removeElement(12);
     CHECK(magic.size()==5);
-    CHECK(acsIter.container.size() == magic.size());
-    CHECK(acsIter.container.size() ==5);
+    CHECK(acsIter.container->size() == magic.size());
+    CHECK(acsIter.container->size() ==5);
   
 }
 
