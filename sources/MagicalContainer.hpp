@@ -42,15 +42,19 @@ public:
 
 
 class AscendingIterator {
-    private:
+    public:
          MagicalContainer& container;
         size_t currentPosition;
 
-    public:
+   
         // constructor
         AscendingIterator( MagicalContainer& container) : container(container), currentPosition(0) {}
         
-        AscendingIterator(MagicalContainer& container, size_t idx): container(container), currentPosition(idx) {}
+        AscendingIterator(MagicalContainer& container, size_t idx): container(container), currentPosition(idx) {
+            if (idx > container.size()){
+            throw std::out_of_range("Invalid index");
+        }
+        }
 
         //copy constructor
         AscendingIterator( const  AscendingIterator& otherAI): container(otherAI.container), currentPosition(otherAI.currentPosition){}
@@ -62,6 +66,8 @@ class AscendingIterator {
 
         bool operator==(const AscendingIterator& other) const;
         bool operator!=(const AscendingIterator& other) const;
+        bool operator >(const AscendingIterator& other) const;
+        bool operator <(const AscendingIterator& other) const;
         //Assignment operator
         AscendingIterator& operator= (const AscendingIterator& other );
         // Move Assignment operator
@@ -87,7 +93,7 @@ public:
     bool forward;
         // Constructors
     SideCrossIterator( MagicalContainer& Ocontainer) : container(Ocontainer), forwardPosition(0), backwardPosition(Ocontainer.size() - 1) , forward(true) {
-        cout<<"Ocontainer.size() - 1: = "<<Ocontainer.size() - 1;
+        // cout<<"Ocontainer.size() - 1: = "<<Ocontainer.size() - 1;
     }
     SideCrossIterator(MagicalContainer& container, size_t idx)  : container(container), forwardPosition(idx) , backwardPosition(container.size() - 1) , forward(true){
         if (idx > container.size()){
@@ -123,10 +129,10 @@ public:
 
 class PrimeIterator {
 public:
-     MagicalContainer& container;
+     MagicalContainer* container;
     size_t currentPosition;
 
-    bool isPrime(int number) const {
+   static bool isPrime(int number) {
         if (number <= 1) {
             return false;
         }
@@ -137,9 +143,14 @@ public:
         }
         return true;
     }
-
-    PrimeIterator( MagicalContainer& container) : container(container), currentPosition(0) {}
-    PrimeIterator(MagicalContainer& container, size_t idx)  : container(container), currentPosition(idx){}
+    //constructors:
+    PrimeIterator():container(nullptr), currentPosition(0){}
+    PrimeIterator( MagicalContainer& container) : container(&container), currentPosition(0) {}
+    PrimeIterator(MagicalContainer& container, size_t idx)  : container(&container), currentPosition(idx){
+        if (idx > container.size()){
+            throw std::out_of_range("Invalid index");
+        }
+    }
     // Copy constructor
     PrimeIterator(const PrimeIterator& otherPI) : container(otherPI.container), currentPosition(otherPI.currentPosition) {}
 

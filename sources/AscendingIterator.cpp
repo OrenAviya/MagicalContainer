@@ -1,28 +1,50 @@
-#include "AscendingIterator.hpp"
+#include "MagicalContainer.hpp"
 
-bool AscendingIterator::operator==(const AscendingIterator& other) const {
+bool  MagicalContainer::AscendingIterator::operator==(const AscendingIterator& other) const {
             return currentPosition == other.currentPosition;
         }
 
-        bool AscendingIterator::operator!=(const AscendingIterator& other) const {
+        bool  MagicalContainer::AscendingIterator::operator!=(const AscendingIterator& other) const {
             return !(*this == other);
         }
 
+        bool MagicalContainer::AscendingIterator::operator >(const AscendingIterator& other) const{
+            return  currentPosition > other.currentPosition;
+        }
+        bool MagicalContainer::AscendingIterator::operator <(const AscendingIterator& other) const{
+            return  currentPosition < other.currentPosition;
+        }
 
         // the AscendingIterator is go over all the elements with no special way. 
-        AscendingIterator& AscendingIterator::operator++() {
+         MagicalContainer::AscendingIterator&  MagicalContainer::AscendingIterator::operator++() {
             ++currentPosition;
             return *this;
         }
 
-        int AscendingIterator::operator*() const {
+        int  MagicalContainer::AscendingIterator::operator*() const {
             return container.elements[currentPosition];
         }
+        MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const AscendingIterator& other){
+     if (this != &other) {
+            this->container = other.container;
+            currentPosition = other.currentPosition;
+        }
+        return *this;
+    
+}
 
+ MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(AscendingIterator&& otherAI) noexcept {
+        if (this != &otherAI) {
+            container = otherAI.container;
+            currentPosition = otherAI.currentPosition;
+            otherAI.currentPosition = 0;
+        }
+        return *this;
+    }
     MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin() const {
         return AscendingIterator(*this);
     }
 
     MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() const {
-        return AscendingIterator(*this);
+       return AscendingIterator(this->container, container.size());
     }
