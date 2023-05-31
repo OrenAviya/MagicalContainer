@@ -37,9 +37,9 @@
     // Dereference operator (operator*)
     int MagicalContainer::SideCrossIterator::operator*() const {
       if (forward)
-            return container.elements[ forwardPosition];
+            return container->elements[ forwardPosition];
         else
-            return container.elements[backwardPosition ];
+            return container->elements[backwardPosition ];
 }
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator& other){
      if (this != &other) {
@@ -53,7 +53,7 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
 }
 
     MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() {
-    if(container.elements.size() % 2 != 0)
+    if(container->elements.size() % 2 != 0)
     {
             if (forwardPosition < backwardPosition) {
             if (forward) {
@@ -70,7 +70,7 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
             forward =false;
         }
     } 
-    else if  (container.elements.size() % 2 == 0){
+    else if  (container->elements.size() % 2 == 0){
         if (forwardPosition < backwardPosition) {
             if (forward) {
                 ++forwardPosition;
@@ -97,13 +97,13 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() const{
  SideCrossIterator it = SideCrossIterator(*this);
 
-   if (container.size() %2 == 0){
-    it.forwardPosition = container.size()/2+1;
-    it.backwardPosition = container.size()/2;
+   if (container->size() %2 == 0){
+    it.forwardPosition = container->size()/2+1;
+    it.backwardPosition = container->size()/2;
     it.forward = false;}
    else{
-    it.forwardPosition = container.size()/2+1;
-    it.backwardPosition = container.size()/2;
+    it.forwardPosition = container->size()/2+1;
+    it.backwardPosition = container->size()/2;
     it.forward = false;
     // cout<< "it.forwardPosition ,it.backwardPosition : "<<it.forwardPosition<< "," <<it.backwardPosition<<"\n";
    }

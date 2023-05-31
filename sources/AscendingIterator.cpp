@@ -22,7 +22,7 @@ bool  MagicalContainer::AscendingIterator::operator==(const AscendingIterator& o
         }
 
         int  MagicalContainer::AscendingIterator::operator*() const {
-            return container.elements[currentPosition];
+            return container->elements[currentPosition];
         }
         MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const AscendingIterator& other){
      if (this != &other) {
@@ -46,5 +46,5 @@ bool  MagicalContainer::AscendingIterator::operator==(const AscendingIterator& o
     }
 
     MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() const {
-       return AscendingIterator(this->container, container.size());
+       return AscendingIterator(*(this->container), container->size());
     }

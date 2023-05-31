@@ -43,14 +43,15 @@ public:
 
 class AscendingIterator {
     public:
-         MagicalContainer& container;
+        MagicalContainer* container;
         size_t currentPosition;
 
    
         // constructor
-        AscendingIterator( MagicalContainer& container) : container(container), currentPosition(0) {}
+        AscendingIterator(): container(nullptr) , currentPosition(0){}
+        AscendingIterator( MagicalContainer& container) : container(&container), currentPosition(0) {}
         
-        AscendingIterator(MagicalContainer& container, size_t idx): container(container), currentPosition(idx) {
+        AscendingIterator(MagicalContainer& container, size_t idx): container(&container), currentPosition(idx) {
             if (idx > container.size()){
             throw std::out_of_range("Invalid index");
         }
@@ -85,23 +86,24 @@ class AscendingIterator {
 //    // SideCrossIterator class
  class SideCrossIterator {
 public:
-    MagicalContainer& container;
+    MagicalContainer* container;
     size_t forwardPosition;
     size_t backwardPosition;
-    int* PforwardPosition = &(container.elements[0]) ;
-    int* PbackwardPosition = &(container.elements[container.size()-1]);
+    int* PforwardPosition = &(container->elements[0]) ;
+    int* PbackwardPosition = &(container->elements[container->size()-1]);
     bool forward;
         // Constructors
-    SideCrossIterator( MagicalContainer& Ocontainer) : container(Ocontainer), forwardPosition(0), backwardPosition(Ocontainer.size() - 1) , forward(true) {
-        // cout<<"Ocontainer.size() - 1: = "<<Ocontainer.size() - 1;
+    SideCrossIterator(): container(nullptr), forwardPosition(0) , backwardPosition(0){}
+    SideCrossIterator( MagicalContainer& Ocontainer) : container(&Ocontainer), forwardPosition(0), backwardPosition(Ocontainer.size() - 1) , forward(true) {
+        
     }
-    SideCrossIterator(MagicalContainer& container, size_t idx)  : container(container), forwardPosition(idx) , backwardPosition(container.size() - 1) , forward(true){
+    SideCrossIterator(MagicalContainer& container, size_t idx)  : container(&container), forwardPosition(idx) , backwardPosition(container.size() - 1) , forward(true){
         if (idx > container.size()){
             throw std::out_of_range("Invalid index");
         }
     }
     // Copy constructor
-    SideCrossIterator(const SideCrossIterator& other) : container(other.container), forwardPosition(other.forwardPosition), backwardPosition(other.container.size() - 1) , forward(true){}
+    SideCrossIterator(const SideCrossIterator& other) : container(other.container), forwardPosition(other.forwardPosition), backwardPosition(other.container->size() - 1) , forward(true){}
 
     // Destructor (no additional cleanup needed)
     ~SideCrossIterator() {}
