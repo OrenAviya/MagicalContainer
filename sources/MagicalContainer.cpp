@@ -9,12 +9,15 @@
     }
 
     void MagicalContainer:: removeElement(int element) {
-       
-        for (auto it = elements.begin(); it != elements.end(); ++it) {
+       auto it = elements.begin();
+        for (it = elements.begin(); it != elements.end(); ++it) {
             if (*it == element) {
                 elements.erase(it);
                 break;
             }
+        }
+        if ( it == elements.end()){ //the loop not break, the element not exist
+            throw std::runtime_error("the element is not exist");
         }
         
     }
@@ -37,3 +40,4 @@ MagicalContainer& MagicalContainer::operator=(MagicalContainer&& other) noexcept
         }
         return *this;
     }
+

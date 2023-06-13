@@ -22,6 +22,10 @@ bool MagicalContainer::PrimeIterator::operator!=(const PrimeIterator& other) con
     }
 
      MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() {
+        if(this->end() == *this ){
+            throw runtime_error ("Increment Beyond End is imposible");
+        }
+    
         ++currentPosition;
         while (currentPosition < container->size() && !isPrime(container->elements[currentPosition])) {
             ++currentPosition;
@@ -29,6 +33,10 @@ bool MagicalContainer::PrimeIterator::operator!=(const PrimeIterator& other) con
         return *this;
     }
     MagicalContainer:: PrimeIterator& MagicalContainer:: PrimeIterator::operator=(const PrimeIterator& other) {
+        if (other.container != this->container){
+                throw runtime_error ("iterators are pointing at different containers");
+            }
+        
         if (this != &other) {
             this->container = other.container;
             currentPosition = other.currentPosition;
