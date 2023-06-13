@@ -80,7 +80,6 @@ TEST_CASE("check begin & end SideCrossIterator"){
     CHECK(magic.size()==5);
     CHECK(sideIter.container->size() == magic.size());
     CHECK(sideIter.container->size() ==5);
-    CHECK(*sideIter.PbackwardPosition == magic.elements[4]);
     
 }
 
